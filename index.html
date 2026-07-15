@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thuỳ Trang x Trung Anh</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: #3498db;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            margin-bottom: -2px;
+        }
+
+        /* Tab Content States */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Layout Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+        }
+
+        /* Result Panel */
+        .result-panel {
+            background-color: #ebf5fb;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .result-title {
+            font-size: 16px;
+            color: #2980b9;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .formula {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bộ Tính Toán Mạch Điện Trở</h1>
+</br>
+</hr>
+  <h1>by TRxTA</h1>
+
+    <!-- Tabs chuyển đổi -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('voltage-divider')">Cầu Phân Áp (Voltage Divider)</button>
+        <button class="tab-btn" onclick="switchTab('wheatstone')">Cầu Wheatstone</button>
+    </div>
+
+    <!-- TAB 1: CẦU PHÂN ÁP -->
+    <div id="voltage-divider" class="tab-content active">
+        <div class="grid">
+            <div class="inputs">
+                <div class="form-group">
+                    <label for="vin">Điện áp ngõ vào - Vin (V):</label>
+                    <input type="number" id="vin" value="5" step="0.1" oninput="calcVoltageDivider()">
+                </div>
+                <div class="form-group">
+                    <label for="r1">Điện trở nhánh trên - R1 (Ω):</label>
+                    <input type="number" id="r1" value="1000" step="1" oninput="calcVoltageDivider()">
+                </div>
+                <div class="form-group">
+                    <label for="r2">Điện trở nhánh dưới - R2 (Ω):</label>
+                    <input type="number" id="r2" value="1000" step="1" oninput="calcVoltageDivider()">
+                </div>
+            </div>
+            <div class="result-panel">
+                <div class="result-title">Điện áp ngõ ra dự kiến (Vout):</div>
+                <div class="result-value" id="vout-result">2.50 V</div>
+                <div class="formula">
+                    Công thức: Vout = Vin * [ R2 / (R1 + R2) ]
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: CẦU WHEATSTONE -->
+    <div id="wheatstone" class="tab-content">
+        <div class="grid">
+            <div class="inputs">
+                <div class="form-group">
+                    <label for="ws-r1">Điện trở R1 (Ω):</label>
+                    <input type="number" id="ws-r1" value="1000" oninput="calcWheatstone()">
+                </div>
+                <div class="form-group">
+                    <label for="ws-r2">Điện trở R2 (Ω):</label>
+                    <input type="number" id="ws-r2" value="1000" oninput="calcWheatstone()">
+                </div>
+                <div class="form-group">
+                    <label for="ws-r3">Điện trở R3 (Ω):</label>
+                    <input type="number" id="ws-r3" value="1000" oninput="calcWheatstone()">
+                </div>
+            </div>
+            <div class="result-panel">
+                <div class="result-title">Điện trở Rx để cầu cân bằng:</div>
+                <div class="result-value" id="rx-result">1000.00 Ω</div>
+                <div class="formula">
+                    Để cầu cân bằng (V_out = 0): Rx = (R2 * R3) / R1
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm chuyển đổi Tab qua lại
+    function switchTab(tabId) {
+        // Ẩn toàn bộ nội dung tab
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        // Bỏ active ở các nút bấm
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Kích hoạt tab được chọn
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Tính toán Cầu Phân Áp
+    function calcVoltageDivider() {
+        const vin = parseFloat(document.getElementById('vin').value) || 0;
+        const r1 = parseFloat(document.getElementById('r1').value) || 0;
+        const r2 = parseFloat(document.getElementById('r2').value) || 0;
+
+        if (r1 + r2 === 0) {
+            document.getElementById('vout-result').innerText = "Lỗi (R1+R2 = 0)";
+            return;
+        }
+
+        const vout = vin * (r2 / (r1 + r2));
+        document.getElementById('vout-result').innerText = vout.toFixed(2) + " V";
+    }
+
+    // Tính toán Cầu Wheatstone
+    function calcWheatstone() {
+        const r1 = parseFloat(document.getElementById('ws-r1').value) || 0;
+        const r2 = parseFloat(document.getElementById('ws-r2').value) || 0;
+        const r3 = parseFloat(document.getElementById('ws-r3').value) || 0;
+
+        if (r1 === 0) {
+            document.getElementById('rx-result').innerText = "Lỗi (R1 không thể bằng 0)";
+            return;
+        }
+
+        const rx = (r2 * r3) / r1;
+        document.getElementById('rx-result').innerText = rx.toFixed(2) + " Ω";
+    }
+
+    // Chạy tính toán lần đầu khi load trang
+    window.onload = function() {
+        calcVoltageDivider();
+        calcWheatstone();
+    }
+</script>
+
+</body>
+</html>
